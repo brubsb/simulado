@@ -1,0 +1,32 @@
+{% extends 'usuarios/base.html' %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'produtos/style.css' %}">
+
+{% block title %}{{ acao }} Produto{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h3>{{ acao }} Produto</h3>
+
+    {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+                {{ message }}
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <form method="post">
+        {% csrf_token %}
+        <input type="text" name="nome" placeholder="Nome do produto" value="{{ produto.nome|default:'' }}" required>
+        <input type="text" name="categoria" placeholder="Categoria" value="{{ produto.categoria|default:'' }}">
+        <input type="number" step="0.01" name="preco" placeholder="Preço" value="{{ produto.preco|default:'' }}" required>
+        <input type="number" name="quantidade_estoque" placeholder="Quantidade" value="{{ produto.quantidade_estoque|default:'' }}">
+        <input type="number" name="estoque_minimo" placeholder="Estoque mínimo" value="{{ produto.estoque_minimo|default:'' }}">
+        <textarea name="descricao" placeholder="Descrição">{{ produto.descricao|default:'' }}</textarea>
+
+        <button type="submit">{{ acao }}</button>
+        <a href="{% url 'lista_produtos' %}" class="menu-btn" style="background-color: gray;">Voltar</a>
+    </form>
+</div>
+{% endblock %}
