@@ -1,0 +1,110 @@
+{% extends 'usuarios/base.html' %}
+{% load static %}
+
+{% block title %}Gestão de Estoque{% endblock %}
+
+{% block content %}
+
+<!-- CSS exclusivo do app estoque -->
+<link rel="stylesheet" href="{% static 'estoque/style.css' %}">
+
+<div class="container">
+
+    <h3>Gestão de Estoque</h3>
+
+    <!-- MENSAGENS DE ERRO / SUCESSO -->
+    {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+                {{ message }}
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <!-- FORMULÁRIO DE MOVIMENTAÇÃO -->
+    <form method="post">
+        {% csrf_token %}
+
+        <label for="produto">Produto:</label>
+        <select name="produto" required>
+            <option value="">Selecione um produto</option>
+            {% for p in produtos %}
+                <option value="{{ p.id }}">{{ p.nome }}</option>
+            {% endfor %}
+        </select>
+
+        <label for="tipo">Tipo de Movimentação:</label>
+        <select name="tipo" required>
+            <option value="entrada">Entrada</option>
+            <option value="saida">Saída</option>
+        </select>
+
+        <label for="quantidade">Quantidade:</label>
+        <input type="number" name="quantidade" min="1" required>
+
+        <button type="submit">Registrar</button>
+        <a href="{% url 'home' %}" class="menu-btn gray">Voltar</a>
+    </form>
+
+
+    <hr>
+
+    <!-- LISTA DE PRODUTOS COM ESTOQUE -->
+    <h4>Produtos em Estoque</h4>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>Categoria</th>
+                <th>Quantidade</th>
+                <th>Estoque Mínimo</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for p in produtos %}
+            <tr {% if p.quantidade_estoque < p.estoque_minimo %} style="background-color: #ffe6e6;" {% endif %}>
+                <td>{{ p.nome }}</td>
+                <td>{{ p.categoria }}</td>
+                <td>{{ p.quantidade_estoque }}</td>
+                <td>{{ p.estoque_minimo }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="4" style="text-align:center;">Nenhum produto encontrado.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+
+    <hr>
+
+    <!-- TABELA DE MOVIMENTAÇÕES RECENTES -->
+    <h4>Movimentações Recentes</h4>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Data</th>
+                <th>Produto</th>
+                <th>Tipo</th>
+                <th>Quantidade</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for m in movimentacoes %}
+            <tr>
+                <td>{{ m.data }}</td>
+                <td>{{ m.produto.nome }}</td>
+                <td>{{ m.tipo|title }}</td>
+                <td>{{ m.quantidade }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="4" style="text-align:center;">Nenhuma movimentação registrada.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+{% endblock %}
+

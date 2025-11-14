@@ -1,0 +1,24 @@
+# Ambiente virtual
+venv/
+ENV/
+env/
+.venv/
+
+# Arquivos do Django
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Arquivos temporários
+*.log
+*.pot
+*.tmp
+
+# Arquivos do sistema
+Thumbs.db
+.DS_Store
+
+# Cache de pacotes
+pip-log.txt
+pip-delete-this-directory.txt

@@ -1,0 +1,56 @@
+{% extends 'usuarios/base.html' %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'produtos/style.css' %}">
+
+{% block title %}Cadastro de Produtos{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h3>Cadastro de Produtos</h3>
+
+    {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+                {{ message }}
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <form method="get">
+        <input type="text" name="q" placeholder="Buscar produto..." value="{{ query|default:'' }}">
+        <button type="submit">Buscar</button>
+        <a href="{% url 'adicionar_produto' %}" class="menu-btn">Novo Produto</a>
+        <a href="{% url 'home' %}" class="menu-btn" style="background-color: gray;">Voltar</a>
+    </form>
+
+    <table border="1" style="width:100%; margin-top:20px; border-collapse:collapse;">
+        <thead>
+            <tr style="background-color:#007bff; color:white;">
+                <th>Nome</th>
+                <th>Categoria</th>
+                <th>Preço</th>
+                <th>Qtd</th>
+                <th>Estoque Mínimo</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for p in produtos %}
+            <tr>
+                <td>{{ p.nome }}</td>
+                <td>{{ p.categoria }}</td>
+                <td>R$ {{ p.preco }}</td>
+                <td>{{ p.quantidade_estoque }}</td>
+                <td>{{ p.estoque_minimo }}</td>
+                <td>
+                    <a href="{% url 'editar_produto' p.id %}">✏️</a>
+                    <a href="{% url 'excluir_produto' p.id %}" onclick="return confirm('Excluir este produto?')">🗑️</a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="6" style="text-align:center;">Nenhum produto encontrado.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
